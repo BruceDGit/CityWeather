@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+	<title>Home</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
+	<script
+		type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+
+	<link rel="stylesheet" href="/static/css/style.css" type="text/css" media="all" />
+
+</head>
+
+<body onload="startTime()">
+
+	<div class="header">
+		<h1 class="indexLogo">城市天气</h1>
+		<div class="indexNvl">
+			<span class="nvl"><a href="/index">首页</a></span>
+			<span class="nvl"><a href="/weather">天气</a></span>
+			<span class="nvl"><a href="/news">资讯</a></span>
+			<span class="nvl"><a href="/trip">出行</a></span>
+			<span class="nvl"><a href="/travel">旅游</a></span>
+			<span class="nvlLR">
+				<span><a href="/login">登录</a></span>/
+				<span><a href="/register">注册</a></span>
+			</span>
+		</div>
+	</div>
+	<div class="container">
+		<div class="city">
+			<div class="title">
+				<h2>天津，天津市</h2>
+				<h3>河西区</h3>
+				<img src="/static/images/u30.png" alt="">
+			</div>
+			<div class="date-time">
+				<div class="dmy">
+					<div id="txt"></div>
+					<div class="date">
+						<!-- Date-JavaScript -->
+						<script type="text/javascript">
+							var mydate = new Date()
+							var year = mydate.getYear()
+							if (year < 1000)
+								year += 1900
+							var day = mydate.getDay()
+							var month = mydate.getMonth()
+							var daym = mydate.getDate()
+							if (daym < 10)
+								daym = "0" + daym
+							var dayarray = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
+							var montharray = new Array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+							document.write(year + "年" + montharray[month] + "月" + daym + "日 " + dayarray[day] + "")
+						</script>
+					</div>
+				</div>
+				<div class="temperature">
+					<p>20°<span>C</span></p>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="forecast">
+			<div class="forecast-icon">
+				<img src="/static/images/forecast.png" alt="New York Weather Widget">
+			</div>
+			<div class="today-weather">
+				<h3>多云</h3>
+				<ul>
+					<li>Now <span> 20°C</span></li>
+					<li>09:00 <span> 22°C</span></li>
+					<li>12:00 <span> 24°C</span></li>
+					<li>15:00 <span> 23°C</span></li>
+					<li>18:00 <span> 20°C</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="clear"></div>
+
+	</div>
+
+	<div class="footer">
+		<div class="copyright">
+			<p>Copyright &copy; 2019.城市天气网 All rights reserved</p>
+		</div>
+	</div>
+
+	<script>
+		function startTime() {
+			var today = new Date();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('txt').innerHTML =
+				h + ":" + m + ":" + s;
+			var t = setTimeout(startTime, 500);
+		}
+		function checkTime(i) {
+			if (i < 10) { i = "0" + i };
+			return i;
+		}
+	</script>
+
+</body>
+
+</html>
