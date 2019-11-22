@@ -35,6 +35,11 @@ def travel():
     #旅游
     return send_file('templates/travel.html')
 
+@app.route('/travel_info')
+def travel_info():
+    #旅游
+    return send_file('templates/travel_info.html')
+
 @app.route('/trip')
 def trip():
     #出行
