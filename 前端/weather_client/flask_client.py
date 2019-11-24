@@ -30,6 +30,11 @@ def news():
     #资讯
     return send_file('templates/news.html')
 
+@app.route('/news_info')
+def news_info():
+    #资讯
+    return send_file('templates/news_info.html')
+
 @app.route('/travel')
 def travel():
     #旅游
