@@ -54,29 +54,6 @@
 
         <div class="row">
             <div class="weatherInfo">
-                <p class="weatherWind">东南风2级</p>
-                <div class="weatherTEMP">
-                    <p>20°<span>C</span></p>
-                    <img src="/static/images/u35.png" alt="多云" class="tianqi">
-                </div>
-                <div class="weatherCounty">河西</div>
-                <div class="weatherLocal">
-                    <p>天津，天津市</p>
-                    <input type="button">
-                </div>
-                <div class="date">
-                    <script type="text/javascript">
-                        var mydate = new Date()
-                        var year = mydate.getYear()
-                        if (year < 1000)
-                            year += 1900
-                        var month = mydate.getMonth() + 1
-                        var daym = mydate.getDate()
-                        if (daym < 10)
-                            daym = "0" + daym
-                        document.write(year + "年" + month + "月" + daym + "日")
-                    </script>
-                </div>
             </div>
 
             <div class="leftcolumn">
@@ -87,25 +64,25 @@
                             <li>
                                 <img src="/static/images/a1.PNG" alt="无法显示">
                                 <p>穿衣指数</p>
-                                <p>最弱</p>
+                                <p></p>
                             </li>
 
                             <li>
                                 <img src="/static/images/a2.PNG" alt="无法显示">
                                 <p>紫外线指数</p>
-                                <p>较冷</p>
+                                <p></p>
                             </li>
 
                             <li>
                                 <img src="/static/images/a3.PNG" alt="无法实现">
                                 <p>洗车指数</p>
-                                <p>不宜</p>
+                                <p></p>
                             </li>
 
                             <li>
                                 <img src="/static/images/a4.PNG" alt="无法实现">
                                 <p>空气污染扩散指数</p>
-                                <p>良</p>
+                                <p></p>
                             </li>
                         </ul>
                     </div>
@@ -267,5 +244,140 @@
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/echarts.min.js"></script>
 <script src="/static/js/weather.js"></script>
+<script src="/static/js/common.js"></script>
+
+<script>
+    // 显示当前日期
+    function write_date() {
+        var mydate = new Date()
+        var year = mydate.getYear()
+        if (year < 1000)
+            year += 1900
+        var month = mydate.getMonth() + 1
+        var daym = mydate.getDate()
+        if (daym < 10)
+            daym = "0" + daym
+        // document.write(year + "年" + month + "月" + daym + "日")
+        $(".container .row .weatherInfo .date").text(year + "年" + month + "月" + daym + "日")
+    }
+    // 渲染实时天气模块
+    function write_weatherinfo() {
+        var $location = localStorage.getItem("location");
+        $.ajax({
+            type: "get",
+            url: "http://127.0.0.1:8000/api/v1/weather/" + $location + "?now=1",
+            beforeSend: function (request) {
+                result = {
+                    'code': 200,
+                    data: {
+                        'weather': '多云',
+                        'temperature': 6,
+                        'wind': {
+                            'scale': 3,
+                            'direction': '西北'
+                        }
+                    }
+                };
+                if (200 == result.code) {
+                    var weatherinfo_tag = $(".container .row .weatherInfo")
+                    var weatherinfo_html = ""
+                    var location_list = $location.split(',')
+                    // todo 完善天气图标
+                    var img_src = '/static/images/u35.png'
+
+                    weatherinfo_html += '<p class="weatherWind">'
+                    // 风力风向
+                    weatherinfo_html += result.data.wind.direction + '风'
+                    weatherinfo_html += result.data.wind.scale + '级'
+                    weatherinfo_html += '</p><div class="weatherTEMP"><p>'
+                    // 温度
+                    weatherinfo_html += result.data.temperature
+                    weatherinfo_html += '°<span>C</span></p><img src="'
+                    // 天气情况
+                    weatherinfo_html += img_src
+                    weatherinfo_html += '" alt="'
+                    weatherinfo_html += result.data.weather
+                    weatherinfo_html += '" class="tianqi"></div><div class="weatherCounty">'
+                    // 区县
+                    weatherinfo_html += location_list[2]
+                    weatherinfo_html += '</div><div class="weatherLocal"><p>'
+                    // 省市
+                    weatherinfo_html += location_list[0] + ',' + location_list[1]
+                    weatherinfo_html += '</p><input type="button"></div><div class="date">'
+                    weatherinfo_html += '<script' + ' type="text/javascript"> write_date(); </' + 'script></div>'
+
+                    weatherinfo_tag.html(weatherinfo_html)
+                } else {
+                    alert(result.error)
+                }
+            }
+        })
+    }
+    // 渲染生活指数
+    function write_livingindex() {
+        var $location = localStorage.getItem("location");
+        $.ajax({
+            type: "get",
+            url: "http://127.0.0.1:8000/api/v1/weather/" + $location + "?living_index=1",
+            beforeSend: function (request) {
+                result = {
+                    'code': 200,
+                    data: {
+                        'clothing': '最弱',
+                        'uv': '高',
+                        'car_washing': '不宜',
+                        'air_pollution_diffusion': '差'
+                    }
+                }
+                if (200 == result.code) {
+                    var livingindex_tag = $(".leftcolumn .card #top ul li")
+                    var data_list = [result.data.clothing, result.data.uv, result.data.car_washing, result.data.air_pollution_diffusion]
+
+                    livingindex_tag.each(function (index, element) {
+                        $(element).children("p:last").text(data_list[index])
+                    })
+                } else {
+                    alert(result.error)
+                }
+            }
+        })
+    }
+
+
+
+    $(function () {
+        //------------------------------------------------------//
+        //                       实时天气                        //
+        //--------------------------------------- --------------//
+        // 1.查找本地存储是否有定位信息
+
+        if (localStorage.getItem("location")) {
+            // 2.如果有就直接发请求获取实时天气数据
+            write_weatherinfo();
+        } else {
+            // 3.如果没有,则程序获取用户定位信息,之后再发请求获取实时天气数据
+            getLocation({ myfunc: write_weatherinfo })
+        }
+
+        //------------------------------------------------------//
+        //                       生活指数                        //
+        //--------------------------------------- --------------//
+        // 1.查找本地存储是否有定位信息
+        if (localStorage.getItem("location")) {
+            // 2.如果有就直接发请求获取
+            write_livingindex();
+        } else {
+            // 3.如果没有,则程序获取用户定位信息,之后再发请求获取
+            getLocation({ myfunc: write_livingindex })
+        }
+
+
+
+
+    })
+
+
+
+</script>
 
 </html>
