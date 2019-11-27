@@ -175,19 +175,19 @@
                 <div class="card">
                     <h2>周边旅游</h2>
                     <a class="more" href="/travel">更多>></a>
-                    <ul class="right">
-                        <li class="headerLine"><span class="view">景点</span><span>天气</span><span>气温</span></li>
+                    <ul class="right" id="surrounding_tour">
+                        <!-- <li class="headerLine"><span class="view">景点</span><span>天气</span><span>气温</span></li>
                         <li class="firstLine"><span class="view">天津之眼</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
                         <li><span class="view">意式风情街</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
                         <li><span class="view">古文化街</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
                         <li><span class="view">五大道</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
-                        <li><span class="view">瓷房子</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
+                        <li><span class="view">瓷房子</span><span>多云转阴</span><span>17 ~ 30℃</span></li> -->
                     </ul>
                 </div>
                 <div class="card">
                     <h2>周边天气</h2>
-                    <ul class="right">
-                        <li class="headerLine"><span class="view">地区</span><span>天气</span><span>气温</span></li>
+                    <ul class="right" id="surrounding_weather">
+                        <!-- <li class="headerLine"><span class="view">地区</span><span>天气</span><span>气温</span></li>
                         <li class="firstLine"><span class="view">和平区</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
                         <li><span class="view">河东区</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
                         <li><span class="view">河西区</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
@@ -203,7 +203,7 @@
                         <li><span class="view">滨海新区</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
                         <li><span class="view">宁河区</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
                         <li><span class="view">静海区</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
-                        <li><span class="view">蓟州区</span><span>多云转阴</span><span>17 ~ 30℃</span></li>
+                        <li><span class="view">蓟州区</span><span>多云转阴</span><span>17 ~ 30℃</span></li> -->
                     </ul>
                 </div>
             </div>
@@ -226,6 +226,43 @@
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/js/banner.js"></script>
 <script src="/static/js/news.js"></script>
-<script>showBanner();</script>
+<script src="/static/js/common.js"></script>
+<script>
+
+    $(function(){
+        showBanner();
+
+        //------------------------------------------------------
+        //                      周边天气                      
+        //------------------------------------------------------
+
+        // 1.查找本地存储是否有定位信息
+        if (localStorage.getItem("location")) {
+            // 2.如果有就直接发请求获取
+            write_surrounding_weather();
+        } else {
+            // 3.如果没有,则程序获取用户定位信息,之后再发请求获取
+            getLocation({ myfunc: write_surrounding_weather })
+        }
+
+        //------------------------------------------------------
+        //                      周边景点                      
+        //------------------------------------------------------
+
+        // 1.查找本地存储是否有定位信息
+        if (localStorage.getItem("location")) {
+            // 2.如果有就直接发请求获取
+            write_surrounding_tour();
+        } else {
+            // 3.如果没有,则程序获取用户定位信息,之后再发请求获取
+            getLocation({ myfunc: write_surrounding_tour })
+        }
+        
+
+
+    })
+    
+
+</script>
 
 </html>
